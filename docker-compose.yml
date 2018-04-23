@@ -1,0 +1,36 @@
+version: '2'
+services: 
+  gems:
+    image: busybox
+    volumes:
+      - /gems
+  postgres:
+    restart: always
+    container_name: postgres_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+       - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: sec_api_development
+  app:
+    build:
+      context: .
+    depends_on:
+      - postgres
+      - gems
+    environment:
+      DOCKER_DB: postgres
+      BUNDLE_PATH: /gems
+    volumes:
+      - .:/app
+    volumes_from:
+      - gems
+    ports:
+      - 3000:3000
+volumes:
+  data:
+    external: true
