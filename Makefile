@@ -11,8 +11,9 @@ make_files:
 symlink: 
 	docker-compose run app bundle exec rake makefiles:symlink_market_data_based_on_performance
 
-
 console: 
 	docker-compose run app bundle exec rails c
 bundle: 
 	docker-compose run app bundle
+schemaload: 
+	docker-compose run app rake db:create db:schema:load
