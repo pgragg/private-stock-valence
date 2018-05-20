@@ -14,29 +14,29 @@ class MarketData
   #   JSON.parse @agent.page.body
   # end
 
-  # def date_performance
-  #   begin 
-  #     @agent.get("https://www.quandl.com/api/v3/datatables/WIKI/PRICES?date=#{@date}" + \
-  #       "&ticker=#{@symbol}&api_key=Uyaf1-7qy5o9EJt8z_xc")
-  #     raw = JSON.parse @agent.page.body
-  #     symbol = raw['datatable']['data'][0][0]
-  #     date = raw['datatable']['data'][0][1]
-  #     open = raw['datatable']['data'][0][2]
-  #     high = raw['datatable']['data'][0][3]
-  #     low = raw['datatable']['data'][0][4]
-  #     close = raw['datatable']['data'][0][5]
-  #     {
-  #       open: open,
-  #       high: high,
-  #       low: low,
-  #       close: close,
-  #       date: date,
-  #       symbol: symbol
-  #     }
-  #   rescue
-  #     {error: true}
-  #   end
-  # end
+  def date_performance
+    begin 
+      @agent.get("https://www.quandl.com/api/v3/datatables/WIKI/PRICES?date=#{@date}" + \
+        "&ticker=#{@symbol}&api_key=Uyaf1-7qy5o9EJt8z_xc")
+      raw = JSON.parse @agent.page.body
+      symbol = raw['datatable']['data'][0][0]
+      date = raw['datatable']['data'][0][1]
+      open = raw['datatable']['data'][0][2]
+      high = raw['datatable']['data'][0][3]
+      low = raw['datatable']['data'][0][4]
+      close = raw['datatable']['data'][0][5]
+      {
+        open: open,
+        high: high,
+        low: low,
+        close: close,
+        date: date,
+        symbol: symbol
+      }
+    rescue
+      {error: true}
+    end
+  end
 
   # def time_series_intraday
   #   "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=#{@symbol}" + \

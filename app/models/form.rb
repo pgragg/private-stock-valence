@@ -15,4 +15,35 @@ class Form < ApplicationRecord
     "#{company.ticker_symbol}_#{filing_date}_#{humanized_term}.txt"
   end
 
+  def self.valence(valence_type=:high_valence)
+    filled = Form.where.not(filing_raw_text: nil).select(:id, :company_id, :filing_date)
+    hv_forms = []
+    filled.map do |form|
+      if form.send(valence_type)
+        hv_forms << form 
+      end
+    end
+    hv_forms
+  end
+
+  def high_valence
+    prices = company.stock_prices.order(:date).pluck(:date, :open).to_h
+    price_on_filing_date = prices[filing_date]
+    price_after = prices[filing_date + 1]
+    return false unless price_on_filing_date && price_after
+    return true if (price_after-price_on_filing_date) > 0
+  end
+
+  def low_valence
+    prices = company.stock_prices.order(:date).pluck(:date, :open).to_h
+    price_on_filing_date = prices[filing_date]
+    price_after = prices[filing_date + 1]
+    return false unless price_on_filing_date && price_after
+    return true if (price_after-price_on_filing_date) < 0
+  end
+
 end
+
+# Stock price date symbol 
+# Company ticker_symbol
+# Form filing_date
