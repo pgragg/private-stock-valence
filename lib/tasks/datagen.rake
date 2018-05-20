@@ -1,6 +1,6 @@
 namespace :datagen do
   desc "Creates companies and forms from indexed data"
-
+  
   task bucket_form_text_by_valence: :environment do 
     # Form.valence(:low_valence).each do |form|
     #   filename = "#{form.company.ticker_symbol}#{form.filing_date.to_s}"
