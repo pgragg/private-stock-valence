@@ -17,6 +17,7 @@
 
 texts_by_valence/*
 features_by_valence/*
+stock_price_changes_by_ticker_and_date/*
 
 all_forms
 indices

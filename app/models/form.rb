@@ -26,6 +26,19 @@ class Form < ApplicationRecord
     hv_forms
   end
 
+  def quantify_valence
+    prices_open = company.stock_prices.order(:date).pluck(:date, :open).to_h
+    prices_close = company.stock_prices.order(:date).pluck(:date, :close).to_h
+    price_before_filing_date = prices_open[filing_date-1]
+    price_on_filing_date = prices_open[filing_date]
+
+    comparison_price = price_on_filing_date || price_before_filing_date
+
+    price_after = prices_close[filing_date + 1]
+    return 'na' unless price_after && comparison_price
+    ((price_after-comparison_price)/comparison_price.to_f)
+  end
+
   def high_valence
     prices = company.stock_prices.order(:date).pluck(:date, :open).to_h
     price_on_filing_date = prices[filing_date]

@@ -1,14 +1,24 @@
 namespace :datagen do
   desc "Creates companies and forms from indexed data"
-  
+
+  task stock_price_changes_by_ticker_and_date: :environment do
+    Form.where.not(filing_raw_text: nil).select(:id, :company_id, :filing_date).each do |form|
+      filename = "#{form.company.ticker_symbol}#{form.filing_date.to_s}"
+      filepath = Rails.root.join('stock_price_changes_by_ticker_and_date', filename)
+      File.open(filepath, 'w+') do |file|
+        file.write form.quantify_valence
+      end
+    end
+  end
+
   task bucket_form_text_by_valence: :environment do 
-    # Form.valence(:low_valence).each do |form|
-    #   filename = "#{form.company.ticker_symbol}#{form.filing_date.to_s}"
-    #   filepath = Rails.root.join('texts_by_valence', 'low', filename)
-    #   File.open(filepath, 'w+') do |file|
-    #     file.write Form.find(form.id).filing_raw_text
-    #   end
-    # end
+    Form.valence(:low_valence).each do |form|
+      filename = "#{form.company.ticker_symbol}#{form.filing_date.to_s}"
+      filepath = Rails.root.join('texts_by_valence', 'low', filename)
+      File.open(filepath, 'w+') do |file|
+        file.write Form.find(form.id).filing_raw_text
+      end
+    end
     Form.valence(:high_valence).each do |form|
       filename = "#{form.company.ticker_symbol}#{form.filing_date.to_s}"
       filepath = Rails.root.join('texts_by_valence', 'high', filename)
